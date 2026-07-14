@@ -26,7 +26,7 @@ public class EnrollmentManager {
     // Enroll Student
     public void enrollStudent() {
 
-        System.out.println("\n===== Student Enrollment =====");
+        System.out.println("\n========== Student Enrollment ==========");
 
         if (studentManager.getStudents().isEmpty()) {
 
@@ -50,23 +50,12 @@ public class EnrollmentManager {
 
         }
 
-        System.out.print("Enter Student ID : ");
+        System.out.print("Enter Student ID: ");
         String studentId = input.nextLine();
 
-        Student selectedStudent = null;
+        Student student = findStudent(studentId);
 
-        for (Student student : studentManager.getStudents()) {
-
-            if (student.getId().equalsIgnoreCase(studentId)) {
-
-                selectedStudent = student;
-                break;
-
-            }
-
-        }
-
-        if (selectedStudent == null) {
+        if (student == null) {
 
             System.out.println("Student Not Found!");
             return;
@@ -81,41 +70,35 @@ public class EnrollmentManager {
 
         }
 
-        System.out.print("Enter Course ID : ");
+        System.out.print("Enter Course ID: ");
         String courseId = input.nextLine();
 
-        Course selectedCourse = null;
+        Course course = findCourse(courseId);
 
-        for (Course course : courseManager.getCourses()) {
-
-            if (course.getCourseId().equalsIgnoreCase(courseId)) {
-
-                selectedCourse = course;
-                break;
-
-            }
-
-        }
-
-        if (selectedCourse == null) {
+        if (course == null) {
 
             System.out.println("Course Not Found!");
             return;
 
         }
 
-        Enrollment enrollment = new Enrollment(selectedStudent, selectedCourse);
+        if (alreadyEnrolled(student, course)) {
 
-        enrollments.add(enrollment);
+            System.out.println("Student is already enrolled in this course!");
+            return;
 
-        System.out.println("Student Enrolled Successfully!");
+        }
+
+        enrollments.add(new Enrollment(student, course));
+
+        System.out.println("Enrollment Successful!");
 
     }
 
     // View Enrollments
     public void viewEnrollments() {
 
-        System.out.println("\n===== Enrollment List =====");
+        System.out.println("\n========== Enrollment List ==========");
 
         if (enrollments.isEmpty()) {
 
@@ -135,10 +118,10 @@ public class EnrollmentManager {
     // Remove Enrollment
     public void removeEnrollment() {
 
-        System.out.print("Enter Student ID : ");
+        System.out.print("Student ID: ");
         String studentId = input.nextLine();
 
-        System.out.print("Enter Course ID : ");
+        System.out.print("Course ID: ");
         String courseId = input.nextLine();
 
         Enrollment removeEnrollment = null;
@@ -146,7 +129,8 @@ public class EnrollmentManager {
         for (Enrollment enrollment : enrollments) {
 
             if (enrollment.getStudent().getId().equalsIgnoreCase(studentId)
-                    && enrollment.getCourse().getCourseId().equalsIgnoreCase(courseId)) {
+                    &&
+                    enrollment.getCourse().getCourseId().equalsIgnoreCase(courseId)) {
 
                 removeEnrollment = enrollment;
                 break;
@@ -155,17 +139,68 @@ public class EnrollmentManager {
 
         }
 
-        if (removeEnrollment != null) {
+        if (removeEnrollment == null) {
 
-            enrollments.remove(removeEnrollment);
-
-            System.out.println("Enrollment Removed Successfully!");
-
-        } else {
-
-            System.out.println("Enrollment Not Found!");
+            System.out.println("Enrollment Not Found.");
+            return;
 
         }
+
+        enrollments.remove(removeEnrollment);
+
+        System.out.println("Enrollment Removed Successfully!");
+
+    }
+
+    // Helper Methods
+
+    private Student findStudent(String id) {
+
+        for (Student student : studentManager.getStudents()) {
+
+            if (student.getId().equalsIgnoreCase(id)) {
+
+                return student;
+
+            }
+
+        }
+
+        return null;
+
+    }
+
+    private Course findCourse(String id) {
+
+        for (Course course : courseManager.getCourses()) {
+
+            if (course.getCourseId().equalsIgnoreCase(id)) {
+
+                return course;
+
+            }
+
+        }
+
+        return null;
+
+    }
+
+    private boolean alreadyEnrolled(Student student, Course course) {
+
+        for (Enrollment enrollment : enrollments) {
+
+            if (enrollment.getStudent().getId().equalsIgnoreCase(student.getId())
+                    &&
+                    enrollment.getCourse().getCourseId().equalsIgnoreCase(course.getCourseId())) {
+
+                return true;
+
+            }
+
+        }
+
+        return false;
 
     }
 
