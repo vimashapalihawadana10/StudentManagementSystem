@@ -9,258 +9,199 @@ import java.util.Scanner;
 
 public class Main {
 
+    static Scanner input = new Scanner(System.in);
+
+    static StudentManager studentManager = new StudentManager();
+    static TeacherManager teacherManager = new TeacherManager();
+    static CourseManager courseManager = new CourseManager(teacherManager);
+    static EnrollmentManager enrollmentManager =
+            new EnrollmentManager(studentManager, courseManager);
+
     public static void main(String[] args) {
 
-        Scanner input = new Scanner(System.in);
+        while (true) {
 
-        StudentManager studentManager = new StudentManager();
-        TeacherManager teacherManager = new TeacherManager();
-        CourseManager courseManager = new CourseManager(teacherManager);
-        EnrollmentManager enrollmentManager =
-                new EnrollmentManager(studentManager, courseManager);
-
-        int choice;
-
-        do {
-
-            System.out.println("\n====================================");
-            System.out.println("   STUDENT MANAGEMENT SYSTEM");
-            System.out.println("====================================");
+            System.out.println("\n======================================");
+            System.out.println("      STUDENT MANAGEMENT SYSTEM");
+            System.out.println("======================================");
             System.out.println("1. Student Management");
             System.out.println("2. Teacher Management");
             System.out.println("3. Course Management");
             System.out.println("4. Enrollment Management");
             System.out.println("5. Exit");
-            System.out.print("Enter your choice : ");
+            System.out.println("======================================");
 
-            choice = Integer.parseInt(input.nextLine());
+            int choice = getChoice();
 
             switch (choice) {
 
                 case 1:
-                    studentMenu(studentManager, input);
+                    studentMenu();
                     break;
 
                 case 2:
-                    teacherMenu(teacherManager, input);
+                    teacherMenu();
                     break;
 
                 case 3:
-                    courseMenu(courseManager, input);
+                    courseMenu();
                     break;
 
                 case 4:
-                    enrollmentMenu(enrollmentManager, input);
+                    enrollmentMenu();
                     break;
 
                 case 5:
-                    System.out.println("Thank You!");
-                    break;
+                    System.out.println("\nThank you for using the system!");
+                    System.exit(0);
 
                 default:
                     System.out.println("Invalid Choice!");
 
             }
 
-        } while (choice != 5);
+        }
+
+    }
+
+    // Read menu choice safely
+    public static int getChoice() {
+
+        while (true) {
+
+            try {
+
+                System.out.print("Enter Choice : ");
+
+                return Integer.parseInt(input.nextLine());
+
+            } catch (NumberFormatException e) {
+
+                System.out.println("Please enter numbers only.");
+
+            }
+
+        }
 
     }
 
     // Student Menu
-    public static void studentMenu(StudentManager manager, Scanner input) {
+    public static void studentMenu() {
 
-        int choice;
+        while (true) {
 
-        do {
-
-            System.out.println("\n===== Student Menu =====");
-            System.out.println("1. Add  Student");
+            System.out.println("\n----- Student Menu -----");
+            System.out.println("1. Add Student");
             System.out.println("2. View Students");
             System.out.println("3. Search Student");
             System.out.println("4. Update Student");
             System.out.println("5. Delete Student");
             System.out.println("6. Back");
-            System.out.print("Enter Choice : ");
 
-            choice = Integer.parseInt(input.nextLine());
+            int choice = getChoice();
 
             switch (choice) {
 
-                case 1:
-                    manager.addStudent();
-                    break;
-
-                case 2:
-                    manager.viewStudents();
-                    break;
-
-                case 3:
-                    manager.searchStudent();
-                    break;
-
-                case 4:
-                    manager.updateStudent();
-                    break;
-
-                case 5:
-                    manager.deleteStudent();
-                    break;
-
-                case 6:
-                    break;
-
-                default:
-                    System.out.println("Invalid Choice!");
+                case 1 -> studentManager.addStudent();
+                case 2 -> studentManager.viewStudents();
+                case 3 -> studentManager.searchStudent();
+                case 4 -> studentManager.updateStudent();
+                case 5 -> studentManager.deleteStudent();
+                case 6 -> { return; }
+                default -> System.out.println("Invalid Choice!");
 
             }
 
-        } while (choice != 6);
+        }
 
     }
 
     // Teacher Menu
-    public static void teacherMenu(TeacherManager manager, Scanner input) {
+    public static void teacherMenu() {
 
-        int choice;
+        while (true) {
 
-        do {
-
-            System.out.println("\n===== Teacher Menu =====");
+            System.out.println("\n----- Teacher Menu -----");
             System.out.println("1. Add Teacher");
             System.out.println("2. View Teachers");
             System.out.println("3. Search Teacher");
             System.out.println("4. Update Teacher");
             System.out.println("5. Delete Teacher");
             System.out.println("6. Back");
-            System.out.print("Enter Choice : ");
 
-            choice = Integer.parseInt(input.nextLine());
+            int choice = getChoice();
 
             switch (choice) {
 
-                case 1:
-                    manager.addTeacher();
-                    break;
-
-                case 2:
-                    manager.viewTeachers();
-                    break;
-
-                case 3:
-                    manager.searchTeacher();
-                    break;
-
-                case 4:
-                    manager.updateTeacher();
-                    break;
-
-                case 5:
-                    manager.deleteTeacher();
-                    break;
-
-                case 6:
-                    break;
-
-                default:
-                    System.out.println("Invalid Choice!");
+                case 1 -> teacherManager.addTeacher();
+                case 2 -> teacherManager.viewTeachers();
+                case 3 -> teacherManager.searchTeacher();
+                case 4 -> teacherManager.updateTeacher();
+                case 5 -> teacherManager.deleteTeacher();
+                case 6 -> { return; }
+                default -> System.out.println("Invalid Choice!");
 
             }
 
-        } while (choice != 6);
+        }
 
     }
 
     // Course Menu
-    public static void courseMenu(CourseManager manager, Scanner input) {
+    public static void courseMenu() {
 
-        int choice;
+        while (true) {
 
-        do {
-
-            System.out.println("\n===== Course Menu =====");
+            System.out.println("\n----- Course Menu -----");
             System.out.println("1. Add Course");
             System.out.println("2. View Courses");
             System.out.println("3. Search Course");
             System.out.println("4. Update Course");
             System.out.println("5. Delete Course");
             System.out.println("6. Back");
-            System.out.print("Enter Choice : ");
 
-            choice = Integer.parseInt(input.nextLine());
+            int choice = getChoice();
 
             switch (choice) {
 
-                case 1:
-                    manager.addCourse();
-                    break;
-
-                case 2:
-                    manager.viewCourses();
-                    break;
-
-                case 3:
-                    manager.searchCourse();
-                    break;
-
-                case 4:
-                    manager.updateCourse();
-                    break;
-
-                case 5:
-                    manager.deleteCourse();
-                    break;
-
-                case 6:
-                    break;
-
-                default:
-                    System.out.println("Invalid Choice!");
+                case 1 -> courseManager.addCourse();
+                case 2 -> courseManager.viewCourses();
+                case 3 -> courseManager.searchCourse();
+                case 4 -> courseManager.updateCourse();
+                case 5 -> courseManager.deleteCourse();
+                case 6 -> { return; }
+                default -> System.out.println("Invalid Choice!");
 
             }
 
-        } while (choice != 6);
+        }
 
     }
 
     // Enrollment Menu
-    public static void enrollmentMenu(EnrollmentManager manager, Scanner input) {
+    public static void enrollmentMenu() {
 
-        int choice;
+        while (true) {
 
-        do {
-
-            System.out.println("\n===== Enrollment Menu =====");
+            System.out.println("\n----- Enrollment Menu -----");
             System.out.println("1. Enroll Student");
             System.out.println("2. View Enrollments");
             System.out.println("3. Remove Enrollment");
             System.out.println("4. Back");
-            System.out.print("Enter Choice : ");
 
-            choice = Integer.parseInt(input.nextLine());
+            int choice = getChoice();
 
             switch (choice) {
 
-                case 1:
-                    manager.enrollStudent();
-                    break;
-
-                case 2:
-                    manager.viewEnrollments();
-                    break;
-
-                case 3:
-                    manager.removeEnrollment();
-                    break;
-
-                case 4:
-                    break;
-
-                default:
-                    System.out.println("Invalid Choice!");
+                case 1 -> enrollmentManager.enrollStudent();
+                case 2 -> enrollmentManager.viewEnrollments();
+                case 3 -> enrollmentManager.removeEnrollment();
+                case 4 -> { return; }
+                default -> System.out.println("Invalid Choice!");
 
             }
 
-        } while (choice != 4);
+        }
 
     }
 
