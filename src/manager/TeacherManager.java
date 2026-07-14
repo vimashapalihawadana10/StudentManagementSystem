@@ -13,19 +13,64 @@ public class TeacherManager {
     // Add Teacher
     public void addTeacher() {
 
-        System.out.println("\n===== Add Teacher =====");
+        System.out.println("\n========== Add Teacher ==========");
 
-        System.out.print("Teacher ID: ");
-        String id = input.nextLine();
+        String id;
+
+        while (true) {
+
+            System.out.print("Teacher ID: ");
+            id = input.nextLine();
+
+            if (isDuplicateId(id)) {
+                System.out.println("Teacher ID already exists!");
+            } else {
+                break;
+            }
+
+        }
 
         System.out.print("Name: ");
         String name = input.nextLine();
 
-        System.out.print("Age: ");
-        int age = Integer.parseInt(input.nextLine());
+        int age;
 
-        System.out.print("Email: ");
-        String email = input.nextLine();
+        while (true) {
+
+            try {
+
+                System.out.print("Age: ");
+                age = Integer.parseInt(input.nextLine());
+
+                if (age <= 0) {
+                    System.out.println("Age must be greater than 0.");
+                    continue;
+                }
+
+                break;
+
+            } catch (NumberFormatException e) {
+
+                System.out.println("Please enter a valid number.");
+
+            }
+
+        }
+
+        String email;
+
+        while (true) {
+
+            System.out.print("Email: ");
+            email = input.nextLine();
+
+            if (email.contains("@") && email.contains(".")) {
+                break;
+            }
+
+            System.out.println("Invalid Email!");
+
+        }
 
         System.out.print("Department: ");
         String department = input.nextLine();
@@ -34,22 +79,28 @@ public class TeacherManager {
 
         teachers.add(teacher);
 
-        System.out.println("Teacher Added Successfully!");
+        System.out.println("\nTeacher Added Successfully!");
+
     }
 
     // View Teachers
     public void viewTeachers() {
 
-        System.out.println("\n===== Teacher List =====");
+        System.out.println("\n========== Teacher List ==========");
 
         if (teachers.isEmpty()) {
+
             System.out.println("No teachers found.");
             return;
+
         }
 
         for (Teacher teacher : teachers) {
+
             teacher.displayInfo();
+
         }
+
     }
 
     // Search Teacher
@@ -61,84 +112,88 @@ public class TeacherManager {
         for (Teacher teacher : teachers) {
 
             if (teacher.getId().equalsIgnoreCase(id)) {
+
                 teacher.displayInfo();
+
                 return teacher;
+
             }
 
         }
 
-        System.out.println("Teacher Not Found!");
+        System.out.println("Teacher Not Found.");
 
         return null;
+
     }
 
     // Update Teacher
     public void updateTeacher() {
 
-        System.out.print("Enter Teacher ID: ");
-        String id = input.nextLine();
+        Teacher teacher = searchTeacher();
 
-        for (Teacher teacher : teachers) {
+        if (teacher == null)
+            return;
 
-            if (teacher.getId().equalsIgnoreCase(id)) {
+        System.out.print("New Name: ");
+        teacher.setName(input.nextLine());
 
-                System.out.print("New Name: ");
-                teacher.setName(input.nextLine());
+        try {
 
-                System.out.print("New Age: ");
-                teacher.setAge(Integer.parseInt(input.nextLine()));
+            System.out.print("New Age: ");
+            teacher.setAge(Integer.parseInt(input.nextLine()));
 
-                System.out.print("New Email: ");
-                teacher.setEmail(input.nextLine());
+        } catch (NumberFormatException e) {
 
-                System.out.print("New Department: ");
-                teacher.setDepartment(input.nextLine());
-
-                System.out.println("Teacher Updated!");
-
-                return;
-            }
+            System.out.println("Invalid Age. Previous age kept.");
 
         }
 
-        System.out.println("Teacher Not Found!");
+        System.out.print("New Email: ");
+        teacher.setEmail(input.nextLine());
+
+        System.out.print("New Department: ");
+        teacher.setDepartment(input.nextLine());
+
+        System.out.println("Teacher Updated Successfully.");
+
     }
 
     // Delete Teacher
     public void deleteTeacher() {
 
-        System.out.print("Enter Teacher ID: ");
-        String id = input.nextLine();
+        Teacher teacher = searchTeacher();
 
-        Teacher deleteTeacher = null;
+        if (teacher == null)
+            return;
+
+        teachers.remove(teacher);
+
+        System.out.println("Teacher Deleted Successfully.");
+
+    }
+
+    // Duplicate ID Check
+    private boolean isDuplicateId(String id) {
 
         for (Teacher teacher : teachers) {
 
             if (teacher.getId().equalsIgnoreCase(id)) {
 
-                deleteTeacher = teacher;
-                break;
+                return true;
 
             }
 
         }
 
-        if (deleteTeacher != null) {
-
-            teachers.remove(deleteTeacher);
-
-            System.out.println("Teacher Deleted!");
-
-        } else {
-
-            System.out.println("Teacher Not Found!");
-
-        }
+        return false;
 
     }
 
     public ArrayList<Teacher> getTeachers() {
+
         return teachers;
+
     }
 
 }
