@@ -19,45 +19,71 @@ public class CourseManager {
     // Add Course
     public void addCourse() {
 
-        System.out.println("\n===== Add Course =====");
+        System.out.println("\n========== Add Course ==========");
 
-        System.out.print("Course ID: ");
-        String courseId = input.nextLine();
+        String courseId;
 
-        System.out.print("Course Name: ");
-        String courseName = input.nextLine();
+        while (true) {
 
-        if (teacherManager.getTeachers().isEmpty()) {
-            System.out.println("No teachers available. Please add a teacher first.");
-            return;
-        }
+            System.out.print("Course ID: ");
+            courseId = input.nextLine();
 
-        System.out.println("\nAvailable Teachers");
-
-        for (Teacher teacher : teacherManager.getTeachers()) {
-            System.out.println(teacher.getId() + " - " + teacher.getName());
-        }
-
-        System.out.print("Enter Teacher ID: ");
-        String teacherId = input.nextLine();
-
-        Teacher selectedTeacher = null;
-
-        for (Teacher teacher : teacherManager.getTeachers()) {
-
-            if (teacher.getId().equalsIgnoreCase(teacherId)) {
-                selectedTeacher = teacher;
+            if (isDuplicateCourse(courseId)) {
+                System.out.println("Course ID already exists!");
+            } else {
                 break;
             }
 
         }
 
-        if (selectedTeacher == null) {
-            System.out.println("Teacher Not Found!");
-            return;
+        String courseName;
+
+        while (true) {
+
+            System.out.print("Course Name: ");
+            courseName = input.nextLine();
+
+            if (!courseName.trim().isEmpty()) {
+                break;
+            }
+
+            System.out.println("Course name cannot be empty.");
+
         }
 
-        Course course = new Course(courseId, courseName, selectedTeacher);
+        if (teacherManager.getTeachers().isEmpty()) {
+
+            System.out.println("No teachers available.");
+            return;
+
+        }
+
+        System.out.println("\nAvailable Teachers");
+
+        for (Teacher teacher : teacherManager.getTeachers()) {
+
+            System.out.println(teacher.getId() + " - " + teacher.getName());
+
+        }
+
+        Teacher teacher = null;
+
+        while (teacher == null) {
+
+            System.out.print("Enter Teacher ID: ");
+            String teacherId = input.nextLine();
+
+            teacher = findTeacher(teacherId);
+
+            if (teacher == null) {
+
+                System.out.println("Teacher Not Found!");
+
+            }
+
+        }
+
+        Course course = new Course(courseId, courseName, teacher);
 
         courses.add(course);
 
@@ -68,15 +94,20 @@ public class CourseManager {
     // View Courses
     public void viewCourses() {
 
-        System.out.println("\n===== Course List =====");
+        System.out.println("\n========== Course List ==========");
 
         if (courses.isEmpty()) {
-            System.out.println("No courses found.");
+
+            System.out.println("No courses available.");
+
             return;
+
         }
 
         for (Course course : courses) {
+
             course.displayCourse();
+
         }
 
     }
@@ -99,7 +130,7 @@ public class CourseManager {
 
         }
 
-        System.out.println("Course Not Found!");
+        System.out.println("Course Not Found.");
 
         return null;
 
@@ -108,64 +139,70 @@ public class CourseManager {
     // Update Course
     public void updateCourse() {
 
-        System.out.print("Enter Course ID: ");
-        String id = input.nextLine();
+        Course course = searchCourse();
 
-        for (Course course : courses) {
+        if (course == null)
+            return;
 
-            if (course.getCourseId().equalsIgnoreCase(id)) {
+        System.out.print("New Course Name: ");
+        course.setCourseName(input.nextLine());
 
-                System.out.print("New Course Name: ");
-                course.setCourseName(input.nextLine());
-
-                System.out.println("Course Updated!");
-
-                return;
-
-            }
-
-        }
-
-        System.out.println("Course Not Found!");
+        System.out.println("Course Updated Successfully.");
 
     }
 
     // Delete Course
     public void deleteCourse() {
 
-        System.out.print("Enter Course ID: ");
-        String id = input.nextLine();
+        Course course = searchCourse();
 
-        Course deleteCourse = null;
+        if (course == null)
+            return;
+
+        courses.remove(course);
+
+        System.out.println("Course Deleted Successfully.");
+
+    }
+
+    // Helper Method
+    private boolean isDuplicateCourse(String id) {
 
         for (Course course : courses) {
 
             if (course.getCourseId().equalsIgnoreCase(id)) {
 
-                deleteCourse = course;
-
-                break;
+                return true;
 
             }
 
         }
 
-        if (deleteCourse != null) {
+        return false;
 
-            courses.remove(deleteCourse);
+    }
 
-            System.out.println("Course Deleted!");
+    // Helper Method
+    private Teacher findTeacher(String id) {
 
-        } else {
+        for (Teacher teacher : teacherManager.getTeachers()) {
 
-            System.out.println("Course Not Found!");
+            if (teacher.getId().equalsIgnoreCase(id)) {
+
+                return teacher;
+
+            }
 
         }
+
+        return null;
 
     }
 
     public ArrayList<Course> getCourses() {
+
         return courses;
+
     }
 
 }
